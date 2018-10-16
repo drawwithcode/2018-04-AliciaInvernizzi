@@ -1,13 +1,19 @@
+var balls = [];
 
 //SETUP
 function setup() {
 createCanvas(windowWidth,windowHeight);
 angleMode(DEGREES);
+
+var ballNumber = 30;
+
+for (var i = 0; i < ballNumber; i++) {
+    var lightsBall = new Ball(random(0,width), random(0,height), random(10,30));
+    balls.push(lightsBall);
+    lightsBall.speed = random(5,10);
+    lightsBall.color = '#FDDABA';
+  }
 }
-
-
-
-
 
 //VARIABLES
 var lightArc1 = {};
@@ -18,13 +24,19 @@ var underBall1 = {};
 var underBall2 = {};
 var underBall3 = {};
 
+var lightsBall = {};
 
-
-
+var balls = [];
 
 //DRAW
 function draw() {
   background('#363159');
+
+  for (var j = 0; j < balls.length; j++) {
+    balls[j].move();
+    balls[j].display();
+  }
+
 
   push();
   rectMode(CENTER);
@@ -49,6 +61,7 @@ function draw() {
   var lightArc3 = new Light (windowWidth/2+20,windowHeight/2-170);
 
 
+
   underBall1.rollover1(mouseX, mouseY);
   underBall2.rollover2(mouseX, mouseY);
   underBall3.rollover3(mouseX, mouseY);
@@ -56,7 +69,6 @@ function draw() {
   lightArc1.rolloverArc1(mouseX,mouseY);
   lightArc2.rolloverArc1(mouseX,mouseY);
   lightArc3.rolloverArc1(mouseX,mouseY);
-
 
   underBall1.display();
   underBall2.display();
@@ -66,10 +78,6 @@ function draw() {
   lightArc2.display();
   lightArc3.display();
 }
-
-
-
-
 
 
 
@@ -90,9 +98,9 @@ function Ball (_x, _y, _diameter) {
     this.rollover1 = function(_px, _py)  {
       var d = dist(_px,_py, this.x, this.y);
       if(d < this.diameter){
-        k = 1;
         this.color = '#FCB97D';
       }else{
+
         this.color = 'gray';
       }
     }
@@ -116,6 +124,22 @@ function Ball (_x, _y, _diameter) {
         this.color = 'gray';
       }
     }
+
+    var yDir = 1; //y direction
+    var xDir = 1;
+
+    this.move = function() {
+    this.x += this.speed * xDir;
+    this.y += this.speed * yDir;
+
+    if (this.y > height || this.y < 0) {
+      yDir = yDir * -1;
+    }
+
+    if (this.x > width || this.x < 0) {
+      xDir = xDir * -1;
+    }
+  }
 }
 
 
@@ -171,8 +195,6 @@ function Light (_x, _y) {
           }
         }
 }
-
-
 
 function windowResized() {
   resizeCanvas(windowWidth,windowHeight);
